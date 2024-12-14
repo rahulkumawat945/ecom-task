@@ -1,0 +1,76 @@
+.price-range-slider {
+    margin-top: 12px;
+    width: 100%;
+  }
+  
+  .range-bar {
+    position: relative;
+    width: 100%;
+    height: 3px;
+    pointer-events: none; /* Disable clicking on the track */
+  }
+  
+  .slider {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: transparent;
+    pointer-events: auto; /* Allow only the slider thumbs to be interactable */
+  }
+  
+  .slider::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 3px;
+    pointer-events: none; /* Prevent clicking on the track in Webkit browsers */
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 25px;
+    border: 2px solid #06b9c0;
+    cursor: pointer;
+    position: relative;
+    top: -7px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 25px;
+    border: 2px solid #06b9c0;
+    cursor: pointer;
+  }
+  
+  .slider::-ms-thumb {
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 25px;
+    border: 2px solid #06b9c0;
+    cursor: pointer;
+  }
+  
+  .range-bar .ui-slider-range {
+    background: #06b9c0;
+  }
+  
+  .labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .labels span {
+    font-size: 16px;
+    color: #000;
+  }
+  
+
+  input[type="checkbox"] {
+    height: 24px;
+    width: 22px;
+    }
