@@ -54,7 +54,7 @@ export type ProductData = {
 export type FilterOptions = {
     price?: { start: number, end: number },
     category?: string[],
-    rating?: string
+    rating?: number
 }
 
 export type SortBy= "price" //add more if requires and API supports

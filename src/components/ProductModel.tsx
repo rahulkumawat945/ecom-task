@@ -1,33 +1,48 @@
-import { useEffect } from "react";
-import { useFetch } from "../hooks/ApiHooks";
+import { useEffect, useState } from "react";
 import { API_URLS } from "../configs/urls";
 import SwiperSlider from "./SwiperSlider";
 import SideModal from "./SideModels";
 import { ProductData } from "../types/productTypes";
-import starImg from '../assets/star.png'
+import starImg from '../assets/star.png';
+import { fetchData } from "../utils/fetchUtils";
 
 type ProductModelProps = {
-    id: number | null,
-    open: boolean,
-    onClose: () => void
-}
+    id: number | null;
+    open: boolean;
+    onClose: () => void;
+};
 
 export default function ProductModel(props: ProductModelProps) {
-    const { id, open } = props;
+    const { id, open, onClose } = props;
 
-    const { data: product, isLoading, refetch } = useFetch<ProductData>({ url: API_URLS.PRODUCTS + "/" + id, noInitialLoad: true })
+    const [product, setProduct] = useState<ProductData | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchProduct = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        const { data, error } = await fetchData<ProductData>(`${API_URLS.PRODUCTS}/${id}`);
+        if (error) {
+            setError(error);
+        } else {
+            setProduct(data);
+        }
+
+        setIsLoading(false);
+    };
 
     useEffect(() => {
-        if (open) {
-            refetch()
+        if (open && id) {
+            fetchProduct();
         }
-    }, [open])
+    }, [open, id]);
 
-    if (!id) {
-        return null
-    }
+    if (!id) return null;
+
     return (
-        <SideModal title="Product Details" open={open} onClose={props.onClose}>
+        <SideModal title="Product Details" open={open} onClose={onClose}>
             {!isLoading ? (
                 <>
                     <div className="mb-20">
@@ -44,14 +59,12 @@ export default function ProductModel(props: ProductModelProps) {
                         <h5 className="mt-4">Reviews: {product?.reviews?.length}</h5>
                         <div className="mt-2 border-2 p-2 rounded-lg bg-slate-100">
                             <div className="mt-2">
-                                {product?.reviews?.map((review) => {
-                                    return (
-                                        <div key={(review.reviewerEmail)}>
-                                            <div className="font-semibold text-xs mt-2">{review.reviewerName} ({review.reviewerEmail})</div>
-                                            <div className="text-sm">{review.comment}</div>
-                                        </div>
-                                    )
-                                })}
+                                {product?.reviews?.map((review) => (
+                                    <div key={review.reviewerEmail}>
+                                        <div className="font-semibold text-xs mt-2">{review.reviewerName} ({review.reviewerEmail})</div>
+                                        <div className="text-sm">{review.comment}</div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -60,9 +73,10 @@ export default function ProductModel(props: ProductModelProps) {
                         <button className={`primary-button flex-1 ${product?.stock ? "" : "disable"}`}>Buy Now</button>
                     </div>
                 </>
-            ) : <span>Loading...</span>}
-
+            ) : (
+                <span>Loading...</span>
+            )}
+            {error && <div className="text-red-500">{error}</div>}
         </SideModal>
-    )
-
+    );
 }

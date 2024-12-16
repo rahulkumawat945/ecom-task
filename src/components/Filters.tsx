@@ -1,86 +1,124 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import PriceRangeSlider from "./PriceRangeSlider";
-import { useFetch } from "../hooks/ApiHooks";
+import Select from "./Select";
 import { API_URLS } from "../configs/urls";
 import { capitalizeFirstLetter } from "../utils/utils";
-import Select from "./Select";
 import { FilterOptions, SortingData } from "../types/productTypes";
-
-
+import { fetchData } from "../utils/fetchUtils";
 
 type FilterProps = {
-    onFilterChange: (_filters: FilterOptions) => void
-    onSortingChange: (_sorting: SortingData) => void
-}
+    onFilterChange: (filters: FilterOptions) => void;
+    onSortingChange: (sorting: SortingData) => void;
+};
 
-export default function Filters(props: FilterProps) {
-    const min = 0;
-    const max = 1000
-    const [selectedCategories, setCategories] = useState<string[]>([])
-    const [price, setPrice] = useState<{ start: number, end: number }>({ start: min, end: max })
+type CategoryResponse = string[];
 
-    //Category API call
-    const { data, isLoading, error } = useFetch<string[]>({ url: API_URLS.CATEGORY_LIST, methodType: "GET"})
+export default function Filters({ onFilterChange, onSortingChange }: FilterProps) {
+    const minPrice = 0;
+    const maxPrice = 1000;
 
-    const onCategorySelected = (e: ChangeEvent<HTMLInputElement>) => {
-        const name = e.target.name
-        const checked = e.target.checked
-        if (checked && name) {
-            setCategories((categories) => [...categories, name])
+    const [categories, setCategories] = useState<CategoryResponse | null>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [priceRange, setPriceRange] = useState<{ start: number; end: number }>({
+        start: minPrice,
+        end: maxPrice,
+    });
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchCategories = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        const { data, error } = await fetchData<CategoryResponse>(API_URLS.CATEGORY_LIST);
+        if (error) {
+            setError(error);
         } else {
-            setCategories((categories) => categories.filter((category) => category !== name));
+            setCategories(data);
         }
-    }
 
-    // const sortingValue
+        setIsLoading(false);
+    };
 
-    const sortOptions: { value: string, sorting: SortingData, label: string }[] = [
-        { value: "price-asc", sorting: { type: "price", order: "asc" }, label: "Price low to high" },
-        { value: "price-desc", sorting: { type: "price", order: "desc" }, label: "Price high to low" },
+    // Fetch categories
+    useEffect(() => {
+
+        fetchCategories();
+    }, []);
+
+    // Sort options
+    const sortOptions: { value: string; sorting: SortingData; label: string }[] = [
+        { value: "price-asc", sorting: { type: "price", order: "asc" }, label: "Price Low to High" },
+        { value: "price-desc", sorting: { type: "price", order: "desc" }, label: "Price High to Low" },
     ];
 
-    const handleCategoryChange = (value: string) => {
-        const sortingOption = sortOptions.find(item => item.value === value)?.sorting
-        console.log("🚀 ~ handleCategoryChange ~ sortingOption:", sortingOption)
+    // Handlers
+    const handleCategoryChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const { name, checked } = e.target;
+        setSelectedCategories((prev) =>
+            checked ? [...prev, name] : prev.filter((category) => category !== name)
+        );
+    };
+
+    const handleSortChange = (value: string): void => {
+        const sortingOption = sortOptions.find((option) => option.value === value)?.sorting;
         if (sortingOption) {
-            props.onSortingChange(sortingOption)
+            onSortingChange(sortingOption);
         }
+    };
+
+    const handleApplyFilters = (): void => {
+        onFilterChange({ category: selectedCategories, price: priceRange });
     };
 
     return (
         <div className="filter-container desktop">
+            {/* Sort By */}
             <Select
                 label="Sort By"
                 options={sortOptions}
-                className=""
                 defaultValue="all"
-                onChange={handleCategoryChange}
+                onChange={handleSortChange}
             />
             <div className="my-6 w-full h-0.5 bg-gray-200 rounded-full" />
+
+            {/* Filters */}
             <div className="flex flex-row items-center">
                 <h5>Filters</h5>
-                {/* Adding an apply button as APIs are not supportive for runtime filters */}
-                <button className="w-full ml-4 text-red-500 border-2 rounded-lg"
-                    onClick={() => { props.onFilterChange({ category: selectedCategories, price: price }) }}
+                <button
+                    className="w-full ml-4 text-red-500 border-2 rounded-lg"
+                    onClick={handleApplyFilters}
                 >
                     Apply
                 </button>
             </div>
+
+            {/* Price Range */}
             <div className="mt-4">
                 <h5>Price Range</h5>
-                <PriceRangeSlider maxPrice={max} minPrice={min} onChange={(start, end) => setPrice({ start: start, end: end })} />
+                <PriceRangeSlider
+                    maxPrice={maxPrice}
+                    minPrice={minPrice}
+                    onChange={(start, end) => setPriceRange({ start, end })}
+                />
+
+                {/* Categories */}
                 <h5 className="mt-4">Categories</h5>
-                {isLoading && <span>Loading ...</span>}
-                {data?.map(category => {
-                    return (
+                {isLoading && <span>Loading...</span>}
+                {error && <span className="text-red-500">{error}</span>}
+                {!isLoading &&
+                    categories?.map?.((category) => (
                         <p className="text-sm mt-3 flex items-center" key={category}>
-                            <input name={category} className="accent-emerald-500/25" type="checkbox" onChange={onCategorySelected}></input>
+                            <input
+                                name={category}
+                                type="checkbox"
+                                className="accent-emerald-500/25"
+                                onChange={handleCategoryChange}
+                            />
                             <label className="ml-2">{capitalizeFirstLetter(category)}</label>
                         </p>
-                    )
-                })}
-                {error && <span>{error}</span>}
+                    ))}
             </div>
         </div>
-    )
+    );
 }

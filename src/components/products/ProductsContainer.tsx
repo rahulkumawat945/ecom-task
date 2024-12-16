@@ -2,99 +2,102 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { ProductsPresenter } from "./ProductsPresenter";
 import { API_URLS } from "../../configs/urls";
 import { FilterOptions, ProductData, ProductResponse, SortingData } from "../../types/productTypes";
-import { useFetch } from "../../hooks/ApiHooks";
+import { fetchData } from "../../utils/fetchUtils";
 
+
+const applyFilters = (filter: FilterOptions, data: ProductData[]): ProductData[] => {
+    const { category, price, rating } = filter;
+
+    return data.filter((product) => {
+        const matchesCategory = !category?.length || category.includes(product.category);
+        const matchesPrice = !price || (product.price >= price.start && product.price <= price.end);
+        const matchesRating = !rating || product.rating >= rating;
+
+        return matchesCategory && matchesPrice && matchesRating;
+    });
+};
 
 export const ProductsContainer = () => {
     const [allProducts, setAllProducts] = useState<ProductData[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
+    const [filters, setFilters] = useState<FilterOptions>({});
+    const [sorting, setSorting] = useState<SortingData>({ type: "price", order: "asc" });
     const [showDetailsModel, setShowDetailsModel] = useState<boolean>(false);
-    const [productId, setSetProductID] = useState<number | null>(null);
-    const [filters, setFilters] = useState<FilterOptions>({})
-    const [hasMore, setHasMore] = useState<boolean>(false)
-    const [sorting, setSorting] = useState<SortingData>({ type: "price", order: "asc" })
+    const [productId, setProductID] = useState<number | null>(null);
+    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
     const observerRef = useRef<HTMLDivElement | null>(null);
-    // const sorting
 
     const limit = 20;
-    const skip = allProducts.length;
 
-    const { data, isLoading, refetch, error } = useFetch<ProductResponse>({
-        url: `${API_URLS.PRODUCTS}?sortBy=${sorting.type}&order=${sorting.order}&limit=${limit}&skip=${skip}&select=title,price,thumbnail,category,brand,rating`,
-        methodType: "GET"
-    });
+    // Fetch data from API
+    const fetchProducts = async () => {
+        setIsLoading(true);
+        setError(null);
 
-    useEffect(() => {
-        if (data?.products && data.skip === skip) {
-            const latestProducts = [...allProducts, ...data.products]
-            setAllProducts(latestProducts)
-            setHasMore(data.products.length < limit)
-            //filter out as per applied constraint and display data
-            setFilteredProducts(applyFilters(filters, latestProducts));
+        const skip = allProducts.length;
+        const url = `${API_URLS.PRODUCTS}?sortBy=${sorting.type}&order=${sorting.order}&limit=${limit}&skip=${skip}&select=title,price,thumbnail,category,brand,rating`;
+
+        const { data, error } = await fetchData<ProductResponse>(url);
+        if (error) {
+            setError(error);
+        } else {
+            if (data?.products && data.skip === skip) {
+                const updatedProducts = [...allProducts, ...data.products];
+                setAllProducts(updatedProducts);
+                setHasMore(data.products.length < limit);
+            }
         }
-    }, [data, skip]);
+        setIsLoading(false);
+    };
 
-    // Handle intersection observer for infinite scrolling
+    // Update filtered products when filters or allProducts change
+    useEffect(() => {
+        setFilteredProducts(applyFilters(filters, allProducts));
+    }, [filters, allProducts]);
+
+
+    // Handle infinite scrolling using Intersection Observer
     const onIntersect = useCallback(
         ([entry]: IntersectionObserverEntry[]) => {
+            console.log("🚀 ~ ProductsContainer ~ entry:", entry)
             if (entry.isIntersecting && !isLoading && !hasMore && !error) {
-                refetch();
+                fetchProducts();
             }
         },
-        [isLoading, refetch]
+        [isLoading, hasMore, error, allProducts]
     );
-
 
     useEffect(() => {
         const observer = new IntersectionObserver(onIntersect, { threshold: 0.5 });
-        if (observerRef.current) {
-            observer.observe(observerRef.current);
-        }
+        if (observerRef.current) observer.observe(observerRef.current);
         return () => observer.disconnect();
-    }, [onIntersect, allProducts]);
+    }, [onIntersect]);
 
-    //Due to API constraint created local filter function that applies after data fetching
-    const applyFilters = (filter: FilterOptions, data: ProductData[]) => {
-        let filteredData = data
-        const { category, price, rating } = filter;
-        filteredData = filteredData.filter(product => {
-            const existInCategory = category?.length ? category?.includes(product.category) : true;
-            const existInPriceRange = price ? (product.price >= price.start && product.price <= price.end) : true
-            const existInRating = rating ? product.rating >= product.rating : true
+    // Handle sorting change
+    const onSortingChange = (newSorting: SortingData) => {
+        setSorting(newSorting);
+        setAllProducts([]);
+        setFilteredProducts([]);
+    };
 
-            return existInCategory && existInPriceRange && existInRating;
-        })
-
-        return filteredData
-    }
-
-    const handleFilterChange = (filter: FilterOptions) => {
-        setFilters(filter)
-        setFilteredProducts(applyFilters(filter, allProducts))
-    }
-
-    const onProductSelected = (id: number) => {
-        setSetProductID(id);
-        setShowDetailsModel(true)
-    }
-
-    //Handled initial mount so refetch doesn't call twice on loading
-    const isInitialMount = useRef(true);
+    // Refetch data when sorting changes
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            refetch()
-        }
-    }, [sorting])
+        fetchProducts();
+    }, [sorting]);
 
-    const onSortingChange = (sorting: SortingData) => {
-        console.log("🚀 ~ onSortingChange ~ sorting:", sorting)
-        setAllProducts([])
-        setFilteredProducts([])
-        setSorting(sorting)
-    }
+    // Handle product selection
+    const onProductSelected = (id: number) => {
+        setProductID(id);
+        setShowDetailsModel(true);
+    };
 
+    // Handle filter changes
+    const handleFilterChange = (filter: FilterOptions) => {
+        setFilters(filter);
+    };
 
     return (
         <ProductsPresenter

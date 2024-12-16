@@ -33,6 +33,7 @@ export const ProductsPresenter = (props: ProductsPresenterProps) => {
     <div className="product-container">
       <div className="flex flex-row">
         <Filters onFilterChange={onFilterChange} onSortingChange={onSortingChange} />
+        {/* Product list */}
         <div className="flex-1">
           <div className="product-list">
             {products.map((product) => (
@@ -44,7 +45,7 @@ export const ProductsPresenter = (props: ProductsPresenterProps) => {
           </div>
           {isLoading && <AnimatedDotsLoader />}
           {/* Hiding observer element so it doesn't call load more before initial load */}
-          {products.length ? <div ref={observerRef} className="w-full" /> : null}
+          <div ref={observerRef} className="w-full" />
         </div>
       </div>
       <ProductModel open={showDetailsModel} id={productId} onClose={onCloseModel} />
