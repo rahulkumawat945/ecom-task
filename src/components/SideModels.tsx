@@ -7,7 +7,7 @@ interface SideModalProps {
     title?: string
 }
 
-const SideModal = ({ open, onClose, children, title }: SideModalProps) => {
+const SideModal = ({ open, onClose, children, title}: SideModalProps) => {
     return (
         <div className={`side-modal ${open ? "open" : ""}`}>
             {/* <div className="overlay" onClick={onClose}></div> */}

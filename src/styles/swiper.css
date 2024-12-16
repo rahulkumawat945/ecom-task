@@ -2,7 +2,6 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    /* user-select: none; */
 }
 
 .slider-wrapper {
@@ -12,6 +11,9 @@
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     cursor: grab;
+}
+.slider-wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 .slider-wrapper.dragging {

@@ -68,7 +68,7 @@ export default function ProductModel(props: ProductModelProps) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-2 fixed w-11/12 bottom-2 p-4 bg-white">
+                    <div className="flex flex-row gap-2 fixed bottom-0 left-0 right-0 p-4 bg-white">
                         <button className={"secondary-button flex-1"}>WishList</button>
                         <button className={`primary-button flex-1 ${product?.stock ? "" : "disable"}`}>Buy Now</button>
                     </div>

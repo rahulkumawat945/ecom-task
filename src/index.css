@@ -14,52 +14,22 @@
     /* Mobile size with bold weight */
   }
 
-  @screen lg {
-    h1 {
-      @apply text-h1-lg font-bold;
-      /* Desktop size with bold weight */
-    }
-  }
-
   h2 {
     @apply text-h2 font-bold;
-  }
-
-  @screen lg {
-    h2 {
-      @apply text-h2-lg font-bold;
-    }
-  }
+  }  
 
   h3 {
     @apply text-h3 font-bold;
-  }
-
-  @screen lg {
-    h3 {
-      @apply text-h3-lg font-bold;
-    }
   }
 
   h4 {
     @apply text-h4 font-bold;
   }
 
-  @screen lg {
-    h4 {
-      @apply text-h4-lg font-bold;
-    }
-  }
-
   h5 {
     @apply text-h5 font-bold;
   }
 
-  @screen lg {
-    h5 {
-      @apply text-h5-lg font-bold;
-    }
-  }
 
   /* Repeat for h4, h5, h6 if needed */
 }

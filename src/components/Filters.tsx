@@ -72,7 +72,7 @@ export default function Filters({ onFilterChange, onSortingChange }: FilterProps
     };
 
     return (
-        <div className="filter-container desktop">
+        <div className="filter-container">
             {/* Sort By */}
             <Select
                 label="Sort By"

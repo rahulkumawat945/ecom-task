@@ -3,14 +3,16 @@
   top: 0;
   right: 0;
   height: 100vh;
+  width: 100%;
   z-index: 999999;
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow-y: auto;
+  overflow: hidden;
   box-shadow: -8px 0 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .side-modal.open {
@@ -23,16 +25,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
 }
 
 .modal-content {
   background-color: #fff;
-  min-height: 100%;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 20px;
+  box-sizing: border-box;
   z-index: 1001;
   position: relative;
 }
