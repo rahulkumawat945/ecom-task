@@ -5,8 +5,8 @@ import Products from './pages/Products.tsx'
 import Header from './components/layouts/Header.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <>
     <Header />
     <Products />
-  </StrictMode>,
+  </>,
 )

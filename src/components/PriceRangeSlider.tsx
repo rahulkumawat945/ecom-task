@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface PriceRangeSliderProps {
   minPrice?: number;
@@ -6,52 +6,58 @@ interface PriceRangeSliderProps {
   onChange?: (start: number, end: number) => void;
 }
 
-const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({ minPrice = 130, maxPrice = 500, onChange }) => {
-  const [start, setStart] = useState<number>(minPrice);
-  const [end, setEnd] = useState<number>(maxPrice);
+const PriceRangeSlider = ({
+  minPrice = 0,
+  maxPrice = 1000,
+  onChange,
+}: PriceRangeSliderProps) => {
+  const [startPrice, setStartPrice] = useState(minPrice);
+  const [endPrice, setEndPrice] = useState(maxPrice);
 
-  useEffect(() => {
-    setStart(minPrice);
-    setEnd(maxPrice);
-  }, [minPrice, maxPrice]);
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>, isStart: boolean) => {
+    const value = Number(e.target.value);
 
-  const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = +e.target.value;
-    const newStart = Math.min(value, end - 1);
-    setStart(newStart);
-    if (onChange) onChange(newStart, end);
-  };
-
-  const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = +e.target.value;
-    const newEnd = Math.max(value, start + 1);
-    setEnd(newEnd);
-    if (onChange) onChange(start, newEnd);
+    if (isStart) {
+      const newStartPrice = Math.min(value, endPrice - 1); // Ensure no overlap
+      setStartPrice(newStartPrice);
+      if (onChange) onChange(newStartPrice, endPrice);
+    } else {
+      const newEndPrice = Math.max(value, startPrice + 1); // Ensure no overlap
+      setEndPrice(newEndPrice);
+      if (onChange) onChange(startPrice, newEndPrice);
+    }
   };
 
   return (
     <div className="price-range-slider">
-      <div className="range-bar">
-        <input
-          type="range"
-          min={minPrice}
-          max={maxPrice}
-          value={start}
-          onChange={handleStartChange}
-          className="slider start-slider"
-        />
-        <input
-          type="range"
-          min={minPrice}
-          max={maxPrice}
-          value={end}
-          onChange={handleEndChange}
-          className="slider end-slider"
-        />
+      <div className="slider-container">
+        <div
+          className="price-slider"
+          style={{
+            left: `${((startPrice - minPrice) / (maxPrice - minPrice)) * 100}%`,
+            right: `${100 - ((endPrice - minPrice) / (maxPrice - minPrice)) * 100}%`,
+          }}
+        ></div>
+        <div className="range-input">
+          <input
+            type="range"
+            min={minPrice}
+            max={maxPrice}
+            value={startPrice}
+            onChange={(e) => handleSliderChange(e, true)}
+          />
+          <input
+            type="range"
+            min={minPrice}
+            max={maxPrice}
+            value={endPrice}
+            onChange={(e) => handleSliderChange(e, false)}
+          />
+        </div>
       </div>
-      <div className="labels">
-        <span>${start}</span>
-        <span>${end}</span>
+      <div className="price-labels">
+        <span>${startPrice}</span>
+        <span>${endPrice}</span>
       </div>
     </div>
   );

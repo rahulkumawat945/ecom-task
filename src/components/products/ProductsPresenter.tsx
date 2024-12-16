@@ -1,4 +1,4 @@
-import { ProductData } from "../../types/productTypes";
+import { FilterOptions, ProductData, SortingData } from "../../types/productTypes";
 import Filters from "../Filters";
 import { ProductCard } from "../ProductCard";
 import { AnimatedDotsLoader } from "../AnimatedDotsLoader";
@@ -12,6 +12,8 @@ interface ProductsPresenterProps {
   showDetailsModel: boolean;
   productId: number | null;
   onCloseModel: () => void;
+  onFilterChange: (_filters: FilterOptions) => void,
+  onSortingChange: (_sorting: SortingData) => void
 }
 
 export const ProductsPresenter = (props: ProductsPresenterProps) => {
@@ -22,28 +24,30 @@ export const ProductsPresenter = (props: ProductsPresenterProps) => {
     onProductSelected,
     showDetailsModel,
     productId,
-    onCloseModel
+    onCloseModel,
+    onFilterChange,
+    onSortingChange
   } = props;
 
   return (
     <div className="product-container">
       <div className="flex flex-row">
-        <Filters onFilterChange={() => {}} />
-        <div>
+        <Filters onFilterChange={onFilterChange} onSortingChange={onSortingChange} />
+        <div className="flex-1">
           <div className="product-list">
             {products.map((product) => (
               <ProductCard
                 key={product.id} product={product}
-                onClick={()=>{onProductSelected(product.id)}}
-                />
+                onClick={() => { onProductSelected(product.id) }}
+              />
             ))}
           </div>
-          <div ref={observerRef} className="flex w-full justify-center">
-            {isLoading && <AnimatedDotsLoader />}
-          </div>
+          {isLoading && <AnimatedDotsLoader />}
+          {/* Hiding observer element so it doesn't call load more before initial load */}
+          {products.length ? <div ref={observerRef} className="w-full" /> : null}
         </div>
       </div>
-      <ProductModel open={showDetailsModel} id={productId} onClose={onCloseModel}/>
+      <ProductModel open={showDetailsModel} id={productId} onClose={onCloseModel} />
     </div>
   );
 };

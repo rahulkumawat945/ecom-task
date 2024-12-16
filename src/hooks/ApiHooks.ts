@@ -52,7 +52,10 @@ function useFetch<T>({ url, methodType = 'GET', body = null, noInitialLoad = fal
   }, [url, methodType, body]);
 
   useEffect(() => {
-    if (url && !noInitialLoad) fetchData();
+    if (url && !noInitialLoad) {
+      console.log("LOADING STARTED")
+      fetchData();
+    }
   }, []);
 
   return { data, isLoading, error, refetch: fetchData };

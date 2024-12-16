@@ -50,3 +50,16 @@ export type ProductData = {
     images: string[];
     thumbnail: string;
 };
+
+export type FilterOptions = {
+    price?: { start: number, end: number },
+    category?: string[],
+    rating?: string
+}
+
+export type SortBy= "price" //add more if requires and API supports
+export type SortOrder = "asc" | "desc" //add more if requires and API supports
+export type SortingData = {
+    type: SortBy
+    order: SortOrder
+}
