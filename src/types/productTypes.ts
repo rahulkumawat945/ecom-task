@@ -1,7 +1,7 @@
 export type Review = {
     rating: number;
     comment: string;
-    date: string; // ISO 8601 format
+    date: string;
     reviewerName: string;
     reviewerEmail: string;
 };
@@ -13,8 +13,8 @@ export type Dimensions = {
 };
 
 export type Meta = {
-    createdAt: string; // ISO 8601 format
-    updatedAt: string; // ISO 8601 format
+    createdAt: string; 
+    updatedAt: string;
     barcode: string;
     qrCode: string;
 };
@@ -38,7 +38,7 @@ export type ProductData = {
     tags: string[];
     brand: string;
     sku: string;
-    weight: number; // Unit unspecified, typically grams or ounces
+    weight: number;
     dimensions?: Dimensions;
     warrantyInformation: string;
     shippingInformation: string;

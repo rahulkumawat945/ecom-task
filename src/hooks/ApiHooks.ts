@@ -4,6 +4,7 @@ type FetchOptions = {
   url: string;
   methodType?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: Record<string, unknown> | null;
+  noInitialLoad?: boolean;
 };
 
 type FetchResponse<T> = {
@@ -13,7 +14,7 @@ type FetchResponse<T> = {
   refetch: () => Promise<void>;
 };
 
-function useFetch<T>({ url, methodType = 'GET', body = null }: FetchOptions): FetchResponse<T> {
+function useFetch<T>({ url, methodType = 'GET', body = null, noInitialLoad = false}: FetchOptions): FetchResponse<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,6 @@ function useFetch<T>({ url, methodType = 'GET', body = null }: FetchOptions): Fe
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    console.log("🚀 ~ fetchData ~ CALLED WITH:", url)
 
     try {
       const options: RequestInit = {
@@ -33,17 +33,14 @@ function useFetch<T>({ url, methodType = 'GET', body = null }: FetchOptions): Fe
       };
 
       const response = await fetch(url, options);
-      console.log("🚀 ~ fetchData ~ result:", response)
 
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
 
       const result: T = await response.json();
-      console.log("🚀 ~ fetchData ~ result:", result)
       setData(result);
     } catch (err: unknown) {
-      console.log("🚀 ~ fetchData ~ err:", err)
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -55,8 +52,7 @@ function useFetch<T>({ url, methodType = 'GET', body = null }: FetchOptions): Fe
   }, [url, methodType, body]);
 
   useEffect(() => {
-    if (url) fetchData();
-    console.log("🚀 ~ useEffect ~ url:", url)
+    if (url && !noInitialLoad) fetchData();
   }, []);
 
   return { data, isLoading, error, refetch: fetchData };

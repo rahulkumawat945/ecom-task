@@ -1,8 +1,9 @@
-import React, { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import PriceRangeSlider from "./PriceRangeSlider";
 import { useFetch } from "../hooks/ApiHooks";
 import { API_URLS } from "../configs/urls";
 import { capitalizeFirstLetter } from "../utils/utils";
+import Select from "./Select";
 
 type FilterOptions = {
     price?: { start: number, end: number },
@@ -32,10 +33,26 @@ export default function Filters(props: FilterProps) {
         }
     }
 
+    const sortOptions = [
+        { value: "price-low-to-high", label: "Price low to high" },
+        { value: "price-high-to-low", label: "Price high to low" },
+    ];
+
+    const handleCategoryChange = (value: string) => {
+        console.log("Selected category:", value);
+    };
+
     return (
         <div className="filter-container desktop">
             <h4>Filters</h4>
             <div className="mt-4">
+                <Select
+                    label="Sort By"
+                    options={sortOptions}
+                    className="mb-4"
+                    defaultValue="all"
+                    onChange={handleCategoryChange}
+                />
                 <h5>Price Range</h5>
                 <PriceRangeSlider maxPrice={max} minPrice={min} onChange={(start, end) => setPrice({ start: start, end: end })} />
                 <h5 className="mt-4">Categories</h5>

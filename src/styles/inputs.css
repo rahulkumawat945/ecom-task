@@ -1,30 +1,31 @@
+/* Slider */
 .price-range-slider {
     margin-top: 12px;
     width: 100%;
-  }
-  
-  .range-bar {
+}
+
+.range-bar {
     position: relative;
     width: 100%;
     height: 3px;
-    pointer-events: none; /* Disable clicking on the track */
-  }
-  
-  .slider {
+    pointer-events: none;
+}
+
+.slider {
     position: absolute;
     width: 100%;
     height: 5px;
     background: transparent;
-    pointer-events: auto; /* Allow only the slider thumbs to be interactable */
-  }
-  
-  .slider::-webkit-slider-runnable-track {
+    pointer-events: auto;
+}
+
+.slider::-webkit-slider-runnable-track {
     background: transparent;
     height: 3px;
-    pointer-events: none; /* Prevent clicking on the track in Webkit browsers */
-  }
-  
-  .slider::-webkit-slider-thumb {
+    pointer-events: none;
+}
+
+.slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 17px;
     height: 17px;
@@ -34,43 +35,94 @@
     cursor: pointer;
     position: relative;
     top: -7px;
-  }
-  
-  .slider::-moz-range-thumb {
+}
+
+.slider::-moz-range-thumb {
     width: 17px;
     height: 17px;
     background: #fff;
     border-radius: 25px;
     border: 2px solid #06b9c0;
     cursor: pointer;
-  }
-  
-  .slider::-ms-thumb {
+}
+
+.slider::-ms-thumb {
     width: 17px;
     height: 17px;
     background: #fff;
     border-radius: 25px;
     border: 2px solid #06b9c0;
     cursor: pointer;
-  }
-  
-  .range-bar .ui-slider-range {
+}
+
+.range-bar .ui-slider-range {
     background: #06b9c0;
-  }
-  
-  .labels {
+}
+
+.labels {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
-  }
-  
-  .labels span {
+}
+
+.labels span {
     font-size: 16px;
     color: #000;
-  }
-  
+}
 
-  input[type="checkbox"] {
+/* CheckBox */
+input[type="checkbox"] {
     height: 24px;
     width: 22px;
+}
+
+/* Select Input */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.select-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.custom-select {
+    width: 100%;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+.custom-select:focus {
+    border-color: #06b9c0;
+    box-shadow: 0 0 0 3px rgba(6, 185, 192, 0.3);
+}
+
+.custom-select option {
+    font-weight: 400;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .custom-select {
+        font-size: 14px;
+        padding: 10px 14px;
     }
+}

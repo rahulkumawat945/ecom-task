@@ -1,6 +1,8 @@
 @import url("./styles/products.css");
 @import url("./styles/layouts.css");
 @import url("./styles/inputs.css");
+@import url("./styles/models.css");
+@import url("./styles/swiper.css");
 
 @tailwind base;
 @tailwind components;
@@ -8,45 +10,57 @@
 
 @layer base {
   h1 {
-    @apply text-h1 font-bold; /* Mobile size with bold weight */
+    @apply text-h1 font-bold;
+    /* Mobile size with bold weight */
   }
+
   @screen lg {
     h1 {
-      @apply text-h1-lg font-bold; /* Desktop size with bold weight */
+      @apply text-h1-lg font-bold;
+      /* Desktop size with bold weight */
     }
   }
+
   h2 {
     @apply text-h2 font-bold;
   }
+
   @screen lg {
     h2 {
       @apply text-h2-lg font-bold;
     }
   }
+
   h3 {
     @apply text-h3 font-bold;
   }
+
   @screen lg {
     h3 {
       @apply text-h3-lg font-bold;
     }
   }
+
   h4 {
     @apply text-h4 font-bold;
   }
+
   @screen lg {
     h4 {
       @apply text-h4-lg font-bold;
     }
   }
+
   h5 {
     @apply text-h5 font-bold;
   }
+
   @screen lg {
     h5 {
       @apply text-h5-lg font-bold;
     }
   }
+
   /* Repeat for h4, h5, h6 if needed */
 }
 
@@ -75,9 +89,9 @@ body {
   min-height: 100vh;
 }
 
-button:hover{
+button:hover {
   opacity: 0.8;
-  animation: opacity 1s ease-out ;
+  animation: opacity 1s ease-out;
 }
 
 h1 {
@@ -85,104 +99,37 @@ h1 {
   line-height: 1.1;
 }
 
-.primary-button {
+.primary-button,
+.secondary-button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #e6d65f;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
+.primary-button {
+  background-color: #e6d65f;
+}
 
 .primary-button:focus,
 .primary-button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+.secondary-button {
+  background-color: #eae9e3;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.disable {
+  background-color: #cccccc !important;
+  border-color: #cccccc !important;
+  color: #666666 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  touch-action: none;
+}

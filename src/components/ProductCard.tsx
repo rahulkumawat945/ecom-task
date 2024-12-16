@@ -1,9 +1,14 @@
 import { ProductData } from "../types/productTypes";
 
-export const ProductCard = ({ product }: { product: ProductData }) => {
+type ProductProps = {
+    product: ProductData,
+    onClick: (_id: number) => void 
+}
+
+export const ProductCard = ({ product, onClick}: ProductProps) => {
     return (
-        <div className="product-item flex flex-1 flex-col">
-            <img className="product-thumbnail" src={product?.thumbnail} />
+        <div className="product-item flex flex-1 flex-col" onClick={() => onClick(product.id)}>
+            <img className="product-thumbnail" src={product?.thumbnail} loading="lazy" />
             <span className="rounded-full px-2 py-1 text-xs font-semibold bg-orange-100 w-fit absolute top-2 right-2">
                 {(product.category || "").toUpperCase()}
             </span>

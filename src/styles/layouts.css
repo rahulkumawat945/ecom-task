@@ -3,10 +3,11 @@ header {
     height: 4rem;
     position: sticky;
     top: 0;
-    background-color: #ccc;
+    background-color: cadetblue;
     color: #fff;
     display: flex;
-    justify-content: center;
+    padding: 0 1rem;
+    /* justify-content: center; */
     align-items: center;
     z-index: 99999;
 }
