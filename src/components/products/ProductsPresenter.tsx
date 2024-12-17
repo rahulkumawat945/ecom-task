@@ -54,7 +54,7 @@ export const ProductsPresenter = (props: ProductsPresenterProps) => {
           <div ref={observerRef} className="w-full" />
         </div>
       </div>
-      <div className="block md:hidden w-full bg-gray-50 fixed bottom-0 left-0 flex items-center p-4">
+      <div className="block lg:hidden w-full bg-gray-50 fixed bottom-0 left-0 flex items-center p-4">
         <button className="primary-button w-full" onClick={() => setShowFilterModel(true)}>Filters</button>
       </div>
       <ProductModel open={showDetailsModel} id={productId} onClose={onCloseModel} />

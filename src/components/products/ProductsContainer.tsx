@@ -9,6 +9,7 @@ const applyFilters = (filter: FilterOptions, data: ProductData[]): ProductData[]
     const { category, price, rating } = filter;
 
     return data.filter((product) => {
+        //if filter values exist then match otherwise return item via true value
         const matchesCategory = !category?.length || category.includes(product.category);
         const matchesPrice = !price || (product.price >= price.start && product.price <= price.end);
         const matchesRating = !rating || product.rating >= rating;
@@ -62,7 +63,6 @@ export const ProductsContainer = () => {
     // Handle infinite scrolling using Intersection Observer
     const onIntersect = useCallback(
         ([entry]: IntersectionObserverEntry[]) => {
-            console.log("🚀 ~ ProductsContainer ~ entry:", entry)
             if (entry.isIntersecting && !isLoading && !hasMore && !error) {
                 fetchProducts();
             }

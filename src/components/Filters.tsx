@@ -83,10 +83,10 @@ export default function Filters({ onFilterChange, onSortingChange }: FilterProps
             <div className="my-6 w-full h-0.5 bg-gray-200 rounded-full" />
 
             {/* Filters */}
-            <div className="flex flex-row items-center">
-                <h5>Filters</h5>
+            <div className="flex flex-row items-center justify-between">
+                <h5 className="text-lg">Filters</h5>
                 <button
-                    className="w-full ml-4 text-red-500 border-2 rounded-lg"
+                    className="w-44 ml-4 text-red-500 border-2 rounded-lg"
                     onClick={handleApplyFilters}
                 >
                     Apply
