@@ -18,7 +18,7 @@ clone the repository and open directory in terminal
 run to install dependencies:
 
 # Scope of improvement
-Right now filters are being applied after data is retrieved because of API limitations. I would have discussed with backend team and prepared flexible API that would tale filters as params and fetch data accordingly. So user would get proper data without making too many calls on backed. Also I missed to configure alias at initially so followed without that, I would have done that so cleaner import paths can be used all over and would not cause issues while moving files from one directory to other.
+Right now filters are being applied after data is retrieved because of API limitations. I would have discussed with backend team and prepared flexible API that would accept filters as params and fetch data accordingly. So user would get proper data without making too many calls on backed. Also I missed to configure alias at initially so followed without that, I would have done that so cleaner import paths can be used all over and would not cause issues while moving files from one directory to other.
 
 
 run to install dependencies:
